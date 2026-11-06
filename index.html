@@ -1,3 +1,4 @@
+
     <!DOCTYPE html>
     <html lang="zh-TW">
     <head>
@@ -95,10 +96,24 @@
         .action-btn:hover {
           background-color: #05B34C;
         }
+        .action-btn:disabled {
+          background-color: #94A3B8;
+          cursor: not-allowed;
+        }
         .hint {
           margin-top: 14px;
           font-size: 12px;
           color: #94A3B8;
+        }
+        #error-banner {
+          display: none;
+          background-color: #FEE2E2;
+          color: #991B1B;
+          padding: 10px;
+          border-radius: 8px;
+          margin-top: 12px;
+          font-size: 12px;
+          text-align: left;
         }
       </style>
     </head>
@@ -122,12 +137,14 @@
           onclick="shareCard()">
             📤 一鍵分享名片給好友
           </button>
-          <div class="hint">點擊上方按鈕選擇聊天室傳送</div>
+          <div id="hint-text"
+          class="hint">點擊上方按鈕選擇聊天室傳送</div>
+          <div id="error-banner"></div>
         </div>
       </div>
 
       <script>
-        // 您的 LIFF ID
+        // 您的專屬 LIFF ID
         const MY_LIFF_ID = "2012420847-jARkdxi9";
 
         // 名片 Flex Message 結構
@@ -235,39 +252,57 @@
           }
         };
 
+        function showError(msg) {
+          const banner =
+          document.getElementById("error-banner");
+          if (banner) {
+            banner.style.display = "block";
+            banner.innerText = msg;
+          }
+        }
+
         // 初始化 LIFF
         async function initLiff() {
           try {
             await liff.init({ liffId: MY_LIFF_ID });
-            if (!liff.isLoggedIn()) {
-              liff.login();
+
+            // 如果不是在手機 LINE 內開啟，提示使用者
+            if (!liff.isInClient()) {
+              document.getElementById("hint-text").innerText =
+              "⚠️ 請在手機 LINE
+              聊天室內開啟此連結以使用分享功能";
             }
           } catch (err) {
             console.error("LIFF 初始化失敗:", err);
+            showError("LIFF 初始化失敗: " + (err.message ||
+            err));
           }
         }
 
         // 調用好友選擇器進行分享
         async function shareCard() {
+          // 若尚未在 LINE 內登入
           if (!liff.isLoggedIn()) {
             liff.login();
             return;
           }
-          if (liff.isApiAvailable("shareTargetPicker")) {
-            try {
-              const res = await
-              liff.shareTargetPicker([cardFlexMessage]);
-              if (res) {
-                // 分享成功後關閉視窗
-                liff.closeWindow();
-              }
-            } catch (error) {
-              console.error("分享失敗:", error);
-              alert("分享已取消或發生錯誤");
+
+          if (!liff.isApiAvailable("shareTargetPicker")) {
+            alert("請確認 LINE Developers 後台的 LIFF
+            設定中，【ShareTargetPicker】是否有切換成 ON！");
+            return;
+          }
+
+          try {
+            const res = await
+            liff.shareTargetPicker([cardFlexMessage]);
+            if (res) {
+              // 分享成功後關閉視窗
+              liff.closeWindow();
             }
-          } else {
-            alert("此環境不支援分享功能，請在手機版 LINE
-            中開啟！");
+          } catch (error) {
+            console.error("分享失敗:", error);
+            alert("已取消發送或發生錯誤：" + error.message);
           }
         }
 
