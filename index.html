@@ -1,0 +1,277 @@
+    <!DOCTYPE html>
+    <html lang="zh-TW">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,
+      initial-scale=1.0">
+      <title>賴昀 ｜ 數位名片分享</title>
+      <!-- 引入 LINE LIFF SDK -->
+      <script charset="utf-8"
+      src="https://static.line-scdn.net/liff/edge/2/sdk.js"></
+      script>
+      <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          font-family: -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial,
+          sans-serif;
+          background-color: #F1F5F9;
+          color: #1E293B;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+          padding: 20px;
+        }
+        .card-container {
+          background: #FFFFFF;
+          max-width: 380px;
+          width: 100%;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+          text-align: center;
+        }
+        .header {
+          background-color: #1E293B;
+          color: #FFFFFF;
+          padding: 30px 20px;
+        }
+        .badge {
+          font-size: 11px;
+          letter-spacing: 2px;
+          color: #94A3B8;
+          font-weight: 700;
+        }
+        .name {
+          font-size: 26px;
+          font-weight: 700;
+          margin-top: 8px;
+        }
+        .title {
+          font-size: 14px;
+          color: #CBD5E1;
+          margin-top: 4px;
+        }
+        .body-content {
+          padding: 24px;
+        }
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 0;
+          border-bottom: 1px solid #E2E8F0;
+          font-size: 14px;
+        }
+        .info-label {
+          color: #64748B;
+          font-weight: 600;
+          font-size: 12px;
+        }
+        .info-value {
+          color: #1E293B;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        .action-btn {
+          width: 100%;
+          background-color: #06C755; /* LINE 官方代表綠色 */
+          color: #FFFFFF;
+          border: none;
+          border-radius: 8px;
+          padding: 14px;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+          margin-top: 20px;
+          transition: background 0.2s;
+        }
+        .action-btn:hover {
+          background-color: #05B34C;
+        }
+        .hint {
+          margin-top: 14px;
+          font-size: 12px;
+          color: #94A3B8;
+        }
+      </style>
+    </head>
+    <body>
+
+      <div class="card-container">
+        <div class="header">
+          <div class="badge">BUSINESS CARD</div>
+          <div class="name">賴昀</div>
+          <div class="title">稽核專員</div>
+        </div>
+        <div class="body-content">
+          <div class="info-item">
+            <span class="info-label">EMAIL</span>
+            <a class="info-value"
+            href="mailto:anna410509@gmail.com">anna410509@gmai
+            l.com</a>
+          </div>
+
+          <button id="shareBtn" class="action-btn"
+          onclick="shareCard()">
+            📤 一鍵分享名片給好友
+          </button>
+          <div class="hint">點擊上方按鈕選擇聊天室傳送</div>
+        </div>
+      </div>
+
+      <script>
+        // 您的 LIFF ID
+        const MY_LIFF_ID = "2012420847-jARkdxi9";
+
+        // 名片 Flex Message 結構
+        const cardFlexMessage = {
+          type: "flex",
+          altText: "賴昀 的名片",
+          contents: {
+            type: "bubble",
+            size: "mega",
+            styles: {
+              header: { backgroundColor: "#1E293B" },
+              body: { backgroundColor: "#FFFFFF" },
+              footer: { backgroundColor: "#F8FAFC" }
+            },
+            header: {
+              type: "box",
+              layout: "vertical",
+              paddingTop: "24px",
+              paddingBottom: "20px",
+              paddingStart: "24px",
+              paddingEnd: "24px",
+              contents: [
+                {
+                  type: "text",
+                  text: "BUSINESS CARD",
+                  size: "xxs",
+                  color: "#94A3B8",
+                  weight: "bold",
+                  letterSpacing: "2px"
+                },
+                {
+                  type: "text",
+                  text: "賴昀",
+                  size: "xxl",
+                  weight: "bold",
+                  color: "#FFFFFF",
+                  margin: "md"
+                },
+                {
+                  type: "text",
+                  text: "稽核專員",
+                  size: "sm",
+                  color: "#CBD5E1",
+                  margin: "xs"
+                }
+              ]
+            },
+            body: {
+              type: "box",
+              layout: "vertical",
+              paddingTop: "20px",
+              paddingBottom: "20px",
+              paddingStart: "24px",
+              paddingEnd: "24px",
+              contents: [
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  alignItems: "center",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "EMAIL",
+                      size: "xxs",
+                      color: "#64748B",
+                      weight: "bold",
+                      flex: 2
+                    },
+                    {
+                      type: "text",
+                      text: "anna410509@gmail.com",
+                      size: "sm",
+                      color: "#1E293B",
+                      weight: "bold",
+                      flex: 6,
+                      wrap: true,
+                      action: {
+                        type: "uri",
+                        label: "發送郵件",
+                        uri: "mailto:anna410509@gmail.com"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            footer: {
+              type: "box",
+              layout: "vertical",
+              paddingAll: "16px",
+              contents: [
+                {
+                  type: "button",
+                  style: "primary",
+                  height: "sm",
+                  color: "#1E293B",
+                  action: {
+                    type: "uri",
+                    label: "寄信聯絡",
+                    uri: "mailto:anna410509@gmail.com"
+                  }
+                }
+              ]
+            }
+          }
+        };
+
+        // 初始化 LIFF
+        async function initLiff() {
+          try {
+            await liff.init({ liffId: MY_LIFF_ID });
+            if (!liff.isLoggedIn()) {
+              liff.login();
+            }
+          } catch (err) {
+            console.error("LIFF 初始化失敗:", err);
+          }
+        }
+
+        // 調用好友選擇器進行分享
+        async function shareCard() {
+          if (!liff.isLoggedIn()) {
+            liff.login();
+            return;
+          }
+          if (liff.isApiAvailable("shareTargetPicker")) {
+            try {
+              const res = await
+              liff.shareTargetPicker([cardFlexMessage]);
+              if (res) {
+                // 分享成功後關閉視窗
+                liff.closeWindow();
+              }
+            } catch (error) {
+              console.error("分享失敗:", error);
+              alert("分享已取消或發生錯誤");
+            }
+          } else {
+            alert("此環境不支援分享功能，請在手機版 LINE
+            中開啟！");
+          }
+        }
+
+        window.onload = initLiff;
+      </script>
+    </body>
+    </html>
